@@ -12,12 +12,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -97,9 +99,22 @@ public class ApachePoi {
     }
     
     //leer de una hoja de calculo
-    public static void leer_hoja_calc() throws FileNotFoundException{
+    public static void leer_hoja_calc() throws FileNotFoundException, IOException{
         FileInputStream in= new FileInputStream(new File("Hoja_calc.xlsx"));
-        
+        XSSFWorkbook libro=new XSSFWorkbook(in);
+        XSSFSheet hoja=libro.getSheetAt(0);
+        XSSFRow row;
+        Iterator<Row> iterar_filas=hoja.iterator();
+        while(iterar_filas.hasNext()){
+            row=(XSSFRow)iterar_filas.next();
+            Iterator<Cell>iterar_cell=row.cellIterator();
+            Cell cell   ;
+            while(iterar_cell.hasNext()){
+                cell=iterar_cell.next();
+                System.out.println(""+cell);
+            }
+        }
+        in.close();
     }
     
     public static void main(String[] args) throws IOException {    
@@ -107,6 +122,8 @@ public class ApachePoi {
         libro_blanco();
         abrir_libro();
         escribir_hoja_calc();
+        System.out.println("");
+        leer_hoja_calc();
     }
     
 }
