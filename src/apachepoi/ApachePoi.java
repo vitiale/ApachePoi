@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,9 @@ import java.util.TreeMap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -118,12 +121,42 @@ public class ApachePoi {
     }
     
     //diferentes tipos de celdas en una hoja
-    public static void diferentes_tipos_celdas() throws FileNotFoundException{
+    public static void diferentes_tipos_celdas() throws FileNotFoundException, IOException{
         FileOutputStream out=new FileOutputStream(new File("diferentes_tipos de celdas.xlsx"));
         XSSFWorkbook libro=new XSSFWorkbook();
         XSSFSheet hoja= libro.createSheet("cel types");
+        
         XSSFRow row=hoja.createRow((short)2);
-        //row.createCell(0).;
+        row.createCell(0).setCellValue("se le pone valor");
+        row.createCell(1).setCellValue("cel value");
+        
+        row=hoja.createRow((short)3);
+        row.createCell(0).setCellValue("cel en blanco");
+        row.createCell(1);
+        
+        row=hoja.createRow((short)4);
+        row.createCell(0).setCellValue("se le pone boolean");
+        row.createCell(1).setCellValue(true);
+        
+        row=hoja.createRow((short)5);
+        row.createCell(0).setCellValue("celda de error");
+        row.createCell(1).setCellValue(XSSFCell.CELL_TYPE_ERROR);
+        row.createCell(2, CellType.ERROR); //esta es la forma que se debe utilizar (+actual) para establecer un tipo determinado en la celda
+        
+        row=hoja.createRow((short)6);
+        row.createCell(0).setCellValue("poenr valor de fecha");
+        row.createCell(1).setCellValue(new Date());
+        
+        row=hoja.createRow((short)7);
+        row.createCell(0).setCellValue("poner de tipo numérico");
+        row.createCell(0, CellType.NUMERIC);
+        
+        row=hoja.createRow((short)0);
+        row.createCell(0).setCellValue("poner un calendar");
+        row.createCell(1).setCellValue(new Date());
+        
+        libro.write(out);
+        out.close();
     }
     
     public static void main(String[] args) throws IOException {    
@@ -133,6 +166,7 @@ public class ApachePoi {
         escribir_hoja_calc();
         System.out.println("");
         leer_hoja_calc();
+        diferentes_tipos_celdas();
     }
     
 }
