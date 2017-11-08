@@ -17,6 +17,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -123,54 +126,65 @@ public class ApachePoi {
     }
     
     //diferentes tipos de celdas en una hoja
-    public static void diferentes_tipos_celdas() throws FileNotFoundException, IOException{
-        FileOutputStream out=new FileOutputStream(new File("diferentes_tipos de celdas.xlsx"));
-        XSSFWorkbook libro=new XSSFWorkbook();
-        XSSFSheet hoja= libro.createSheet("cel types");
-        
-        XSSFRow row=hoja.createRow((short)2);
-        row.createCell(0).setCellValue("se le pone valor");
-        row.createCell(1).setCellValue("cel value");
-        
-        row=hoja.createRow((short)3);
-        row.createCell(0).setCellValue("cel en blanco");
-        row.createCell(1);
-        
-        row=hoja.createRow((short)4);
-        row.createCell(0).setCellValue("se le pone boolean");
-        row.createCell(1).setCellValue(true);
-        
-        row=hoja.createRow((short)5);
-        row.createCell(0).setCellValue("celda de error");
-        row.createCell(1).setCellValue(XSSFCell.CELL_TYPE_ERROR);
-        row.createCell(2, CellType.ERROR); //esta es la forma que se debe utilizar (+actual) para establecer un tipo determinado en la celda
-        
-        row=hoja.createRow((short)6);
-        row.createCell(0).setCellValue("poener valor de fecha");
-        row.createCell(1).setCellValue(new Date());
-        
-        row=hoja.createRow((short)7);
-        row.createCell(0).setCellValue("poner de tipo numérico");
-        row.createCell(1, CellType.NUMERIC);
-        
-        row=hoja.createRow((short)0);
-        row.createCell(0).setCellValue("poner un string");
-        row.createCell(1).setCellValue("esto es un string");
-        
-        //fechas con formato
-        row=hoja.createRow((short)8);
-        CellStyle style=libro.createCellStyle();
-        CreationHelper ch=libro.getCreationHelper();
-        style.setDataFormat(ch.createDataFormat().getFormat("d/m/yy h:mm"));
-        row.createCell(0).setCellValue("formato de fecha d/m/yy h:mm");
-        Cell cell=row.createCell(1);
-        cell.setCellValue(new Date());
-        cell.setCellStyle(style);
-//        row.createCell(1).setCellValue(new Date());
-//        row.createCell(1).setCellStyle(style);
-        
-        libro.write(out);
-        out.close();
+    public static void diferentes_tipos_celdas()/* throws FileNotFoundException, IOException*/ {
+        FileOutputStream out;
+        try {
+            out = new FileOutputStream(new File("diferentes_tipos de celdas.xlsx"));
+
+            XSSFWorkbook libro = new XSSFWorkbook();
+
+            XSSFSheet hoja = libro.createSheet("cel types");
+
+            XSSFRow row = hoja.createRow((short) 2);
+            row.createCell(0).setCellValue("se le pone valor");
+            row.createCell(1).setCellValue("cel value");
+
+            row = hoja.createRow((short) 3);
+            row.createCell(0).setCellValue("cel en blanco");
+            row.createCell(1);
+
+            row = hoja.createRow((short) 4);
+            row.createCell(0).setCellValue("se le pone boolean");
+            row.createCell(1).setCellValue(true);
+
+            row = hoja.createRow((short) 5);
+            row.createCell(0).setCellValue("celda de error");
+            row.createCell(1).setCellValue(XSSFCell.CELL_TYPE_ERROR);
+            row.createCell(2, CellType.ERROR); //esta es la forma que se debe utilizar (+actual) para establecer un tipo determinado en la celda
+
+            row = hoja.createRow((short) 6);
+            row.createCell(0).setCellValue("poener valor de fecha");
+            row.createCell(1).setCellValue(new Date());
+
+            row = hoja.createRow((short) 7);
+            row.createCell(0).setCellValue("poner de tipo numérico");
+            row.createCell(1, CellType.NUMERIC);
+
+            row = hoja.createRow((short) 0);
+            row.createCell(0).setCellValue("poner un string");
+            row.createCell(1).setCellValue("esto es un string");
+
+            //fechas con formato
+            row = hoja.createRow((short) 8);
+            CellStyle style = libro.createCellStyle();
+            CreationHelper ch = libro.getCreationHelper();
+            style.setDataFormat(ch.createDataFormat().getFormat("d/m/yy h:mm"));
+            row.createCell(0).setCellValue("formato de fecha d/m/yy h:mm");
+            Cell cell = row.createCell(1);
+            cell.setCellValue(new Date());
+            cell.setCellStyle(style);
+
+            libro.write(out);
+            out.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ApachePoi.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(ApachePoi.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
+        }
     }
     
     public static void main(String[] args) throws IOException {    
