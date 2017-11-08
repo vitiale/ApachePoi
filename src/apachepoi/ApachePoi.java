@@ -78,15 +78,15 @@ public class ApachePoi {
         XSSFRow row;
         //escribir los datos
         Map<String, Object[]> map=new TreeMap<String, Object[]>();
-        map.put("1", new Object[]{"NOMBRE","EDAD"});
-        map.put("2", new Object[]{"Pedro","29"});
-        map.put("3", new Object[]{"Oscar","26"});
-        map.put("4", new Object[]{"María","23"});
+        map.put("1", new Object[]{"NOMBRE","EDAD","SEXO"});
+        map.put("2", new Object[]{"Pedro","29","M"});
+        map.put("3", new Object[]{"Oscar","26","M"});
+        map.put("4", new Object[]{"María","23","F"});
         Set<String> llaves=map.keySet();
         int row_id=0;
         for(String llave:llaves){
             //esto es lo que va a escribir
-            System.out.println(llave+"  "+map.get(llave)[0]+"  "+map.get(llave)[1]);
+            System.out.println(llave+"  "+map.get(llave)[0]+"           "+map.get(llave)[1]+"                       "+map.get(llave)[2]);
             row=hoja.createRow(row_id++);
             int cell_id=0;
             for(Object elemento: map.get(llave)){
@@ -115,6 +115,15 @@ public class ApachePoi {
             }
         }
         in.close();
+    }
+    
+    //diferentes tipos de celdas en una hoja
+    public static void diferentes_tipos_celdas() throws FileNotFoundException{
+        FileOutputStream out=new FileOutputStream(new File("diferentes_tipos de celdas.xlsx"));
+        XSSFWorkbook libro=new XSSFWorkbook();
+        XSSFSheet hoja= libro.createSheet("cel types");
+        XSSFRow row=hoja.createRow((short)2);
+        //row.createCell(0).;
     }
     
     public static void main(String[] args) throws IOException {    
