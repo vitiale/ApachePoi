@@ -55,11 +55,13 @@ public class ApachePoi {
     
     //Crear libro en blanco
     public static void libro_blanco() throws FileNotFoundException, IOException{
-        FileOutputStream file=new FileOutputStream(new File("blanco.xlsx"));
+        File file=new File("blanco.xlsx");
+        FileOutputStream out=new FileOutputStream(file);
         XSSFWorkbook libro_blanco=new XSSFWorkbook();
-        libro_blanco.write(file);
+        XSSFSheet hoja=libro_blanco.createSheet("Primera hoja");
+        libro_blanco.write(out);
         System.out.println("Se ha creado el libro excel en blanco correctamente");
-        file.close();
+        out.close();
     }
     
     //Abrir un libro ya creado
