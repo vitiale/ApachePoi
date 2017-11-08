@@ -20,7 +20,9 @@ import java.util.TreeMap;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -144,16 +146,28 @@ public class ApachePoi {
         row.createCell(2, CellType.ERROR); //esta es la forma que se debe utilizar (+actual) para establecer un tipo determinado en la celda
         
         row=hoja.createRow((short)6);
-        row.createCell(0).setCellValue("poenr valor de fecha");
+        row.createCell(0).setCellValue("poener valor de fecha");
         row.createCell(1).setCellValue(new Date());
         
         row=hoja.createRow((short)7);
         row.createCell(0).setCellValue("poner de tipo numérico");
-        row.createCell(0, CellType.NUMERIC);
+        row.createCell(1, CellType.NUMERIC);
         
         row=hoja.createRow((short)0);
-        row.createCell(0).setCellValue("poner un calendar");
-        row.createCell(1).setCellValue(new Date());
+        row.createCell(0).setCellValue("poner un string");
+        row.createCell(1).setCellValue("esto es un string");
+        
+        //fechas con formato
+        row=hoja.createRow((short)8);
+        CellStyle style=libro.createCellStyle();
+        CreationHelper ch=libro.getCreationHelper();
+        style.setDataFormat(ch.createDataFormat().getFormat("d/m/yy h:mm"));
+        row.createCell(0).setCellValue("formato de fecha d/m/yy h:mm");
+        Cell cell=row.createCell(1);
+        cell.setCellValue(new Date());
+        cell.setCellStyle(style);
+//        row.createCell(1).setCellValue(new Date());
+//        row.createCell(1).setCellStyle(style);
         
         libro.write(out);
         out.close();
