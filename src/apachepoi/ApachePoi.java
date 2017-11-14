@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,6 +28,9 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -189,7 +193,36 @@ public class ApachePoi {
         }
     }
     
-    public static void main(String[] args) throws IOException {    
+    public static void lectura_xls_xlsx() throws FileNotFoundException, IOException, InvalidFormatException{
+        System.out.println("");
+            //Prueba de ambos formatos*******************************
+        FileInputStream in=new FileInputStream(new File("Copy of Campos que se llenan en un alta manual.xls"));
+        //FileInputStream in=new FileInputStream(new File("Copy of Campos que se llenan en un alta manual.xlsx"));
+        Workbook libro = WorkbookFactory.create(in);
+        Sheet hoja_actual = libro.getSheetAt(0);
+        Iterator<Row> iterador_fila = hoja_actual.iterator();    
+        ArrayList<Cell>lista=new ArrayList();
+        Row row;
+        Cell cell;
+        int id_row=0;
+        while(iterador_fila.hasNext()){
+            row=iterador_fila.next();
+            long cantidad=row.getLastCellNum();
+            Iterator<Cell> iterador_cell=row.iterator();
+            if(id_row==1){
+                    System.out.println("cantidad de columnas del documento: "+cantidad);
+                    System.out.println("");
+                }
+            while(iterador_cell.hasNext()){
+                cell=iterador_cell.next();                
+                //System.out.println("celda actual: "+cell);
+            }
+            id_row++;
+        }
+        System.out.println("Creado para ambos formatos");
+    }
+    
+    public static void main(String[] args) throws IOException, FileNotFoundException, InvalidFormatException {    
         // TODO code application logic here
         libro_blanco();
         abrir_libro();
@@ -197,6 +230,7 @@ public class ApachePoi {
         System.out.println("");
         leer_hoja_calc();
         diferentes_tipos_celdas();
+        lectura_xls_xlsx();
     }
     
 }
