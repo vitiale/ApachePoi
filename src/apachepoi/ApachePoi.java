@@ -27,10 +27,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.util.SystemOutLogger;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -45,92 +49,91 @@ public class ApachePoi {
     /**
      * @param args the command line arguments
      */
-    
-    public void readWriteExcelFile(File excelFile, File excelNewFile){
-        InputStream excelStream=null;
-        OutputStream excelNewOutputStream=null;
+    public void readWriteExcelFile(File excelFile, File excelNewFile) {
+        InputStream excelStream = null;
+        OutputStream excelNewOutputStream = null;
         try {
-            HSSFWorkbook hssfWorkbook =new HSSFWorkbook(excelStream);
-            HSSFWorkbook hssfWorkbookNew =new HSSFWorkbook();
-            
+            HSSFWorkbook hssfWorkbook = new HSSFWorkbook(excelStream);
+            HSSFWorkbook hssfWorkbookNew = new HSSFWorkbook();
+
         } catch (Exception e) {
         }
     }
-    
+
     //Crear libro en blanco
-    public static void libro_blanco() throws FileNotFoundException, IOException{
-        File file=new File("blanco.xlsx");
-        FileOutputStream out=new FileOutputStream(file);
-        XSSFWorkbook libro_blanco=new XSSFWorkbook();
-        XSSFSheet hoja=libro_blanco.createSheet("Primera hoja");
+    public static void libro_blanco() throws FileNotFoundException, IOException {
+        File file = new File("blanco.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        XSSFWorkbook libro_blanco = new XSSFWorkbook();
+        XSSFSheet hoja = libro_blanco.createSheet("Primera hoja");
         libro_blanco.write(out);
         System.out.println("Se ha creado el libro excel en blanco correctamente");
         out.close();
     }
-    
+
     //Abrir un libro ya creado
-    public static void abrir_libro() throws FileNotFoundException, IOException{
-        File file=new File("PaisesIdiomasMonedas.xlsx");
-        FileInputStream file_input=new FileInputStream(file);
-        XSSFWorkbook libro_abierto=new XSSFWorkbook(file_input);
-        if(file.isFile() && file.exists()){
+    public static void abrir_libro() throws FileNotFoundException, IOException {
+        File file = new File("PaisesIdiomasMonedas.xlsx");
+        FileInputStream file_input = new FileInputStream(file);
+        XSSFWorkbook libro_abierto = new XSSFWorkbook(file_input);
+        if (file.isFile() && file.exists()) {
             System.out.println("Fichero abierto correctamente");
-        }else{
+        } else {
             System.out.println("No se ha podido abriri correctamente el fichero");
         }
         file_input.close();
     }
-    
+
     //Crear un libro y añadirle datos en una hoja de calculo
-    public static void escribir_hoja_calc() throws IOException{
+    public static void escribir_hoja_calc() throws IOException {
         File file = new File("Hoja_calc.xlsx");
-        FileOutputStream out=new FileOutputStream(file);
-        XSSFWorkbook libro=new XSSFWorkbook();
+        FileOutputStream out = new FileOutputStream(file);
+        XSSFWorkbook libro = new XSSFWorkbook();
         //creamos hoja blanco
-        XSSFSheet hoja=libro.createSheet("Informacion");
+        XSSFSheet hoja = libro.createSheet("Informacion");
         //creamos un objeto row(fila)
         XSSFRow row;
         //escribir los datos
-        Map<String, Object[]> map=new TreeMap<String, Object[]>();
-        map.put("1", new Object[]{"NOMBRE","EDAD","SEXO"});
-        map.put("2", new Object[]{"Pedro","29","M"});
-        map.put("3", new Object[]{"Oscar","26","M"});
-        map.put("4", new Object[]{"María","23","F"});
-        Set<String> llaves=map.keySet();
-        int row_id=0;
-        for(String llave:llaves){
+        Map<String, Object[]> map = new TreeMap<String, Object[]>();
+        map.put("1", new Object[]{"NOMBRE", "EDAD", "SEXO"});
+        map.put("2", new Object[]{"Pedro", "29", "M"});
+        map.put("3", new Object[]{"Oscar", "26", "M"});
+        map.put("4", new Object[]{"María", "23", "F"});
+        Set<String> llaves = map.keySet();
+        int row_id = 0;
+        for (String llave : llaves) {
             //esto es lo que va a escribir
-            System.out.println(llave+"  "+map.get(llave)[0]+"           "+map.get(llave)[1]+"                       "+map.get(llave)[2]);
-            row=hoja.createRow(row_id++);
-            int cell_id=0;
-            for(Object elemento: map.get(llave)){
-                Cell cell=row.createCell(cell_id++);
-                cell.setCellValue((String)elemento);
-            }            
+            System.out.println(llave + "  " + map.get(llave)[0] + "           " + map.get(llave)[1] + "                       " + map.get(llave)[2]);
+            row = hoja.createRow(row_id++);
+            int cell_id = 0;
+            for (Object elemento : map.get(llave)) {
+                Cell cell = row.createCell(cell_id++);
+                cell.setCellValue((String) elemento);
+            }
         }
         libro.write(out);
-        out.close();        
+        out.close();
     }
-    
+
     //leer de una hoja de calculo
-    public static void leer_hoja_calc() throws FileNotFoundException, IOException{
-        FileInputStream in= new FileInputStream(new File("Hoja_calc.xlsx"));
-        XSSFWorkbook libro=new XSSFWorkbook(in);
-        XSSFSheet hoja=libro.getSheetAt(0);
+    public static void leer_hoja_calc() throws FileNotFoundException, IOException {
+        FileInputStream in = new FileInputStream(new File("Hoja_calc.xlsx"));
+        XSSFWorkbook libro = new XSSFWorkbook(in);
+        XSSFSheet hoja = libro.getSheetAt(0);
         XSSFRow row;
-        Iterator<Row> iterar_filas=hoja.iterator();
-        while(iterar_filas.hasNext()){
-            row=(XSSFRow)iterar_filas.next();
-            Iterator<Cell>iterar_cell=row.cellIterator();
-            Cell cell   ;
-            while(iterar_cell.hasNext()){
-                cell=iterar_cell.next();
-                System.out.println(""+cell);
+        Iterator<Row> iterar_filas = hoja.iterator();
+        while (iterar_filas.hasNext()) {
+            row = (XSSFRow) iterar_filas.next();
+            Iterator<Cell> iterar_cell = row.cellIterator();
+            Cell cell;
+            while (iterar_cell.hasNext()) {
+                cell = iterar_cell.next();
+                System.out.println("" + cell);
             }
         }
         in.close();
     }
-    
+
     //diferentes tipos de celdas en una hoja
     public static void diferentes_tipos_celdas()/* throws FileNotFoundException, IOException*/ {
         FileOutputStream out;
@@ -192,45 +195,120 @@ public class ApachePoi {
             System.out.println(ex);
         }
     }
-    
-    public static void lectura_xls_xlsx() throws FileNotFoundException, IOException, InvalidFormatException{
+
+    public static void lectura_xls_xlsx() throws FileNotFoundException, IOException, InvalidFormatException {
         System.out.println("");
-            //Prueba de ambos formatos*******************************
-        FileInputStream in=new FileInputStream(new File("Copy of Campos que se llenan en un alta manual.xls"));
+        //Prueba de ambos formatos*******************************
+        FileInputStream in = new FileInputStream(new File("Copy of Campos que se llenan en un alta manual.xls"));
         //FileInputStream in=new FileInputStream(new File("Copy of Campos que se llenan en un alta manual.xlsx"));
         Workbook libro = WorkbookFactory.create(in);
         Sheet hoja_actual = libro.getSheetAt(0);
-        Iterator<Row> iterador_fila = hoja_actual.iterator();    
-        ArrayList<Cell>lista=new ArrayList();
+        Iterator<Row> iterador_fila = hoja_actual.iterator();
+        ArrayList<Cell> lista = new ArrayList();
         Row row;
         Cell cell;
-        int id_row=0;
-        while(iterador_fila.hasNext()){
-            row=iterador_fila.next();
-            long cantidad=row.getLastCellNum();
-            Iterator<Cell> iterador_cell=row.iterator();
-            if(id_row==1){
-                    System.out.println("cantidad de columnas del documento: "+cantidad);
-                    System.out.println("");
-                }
-            while(iterador_cell.hasNext()){
-                cell=iterador_cell.next();                
+        int id_row = 0;
+        while (iterador_fila.hasNext()) {
+            row = iterador_fila.next();
+            long cantidad = row.getLastCellNum();
+            Iterator<Cell> iterador_cell = row.iterator();
+            if (id_row == 1) {
+                System.out.println("cantidad de columnas del documento: " + cantidad);
+                System.out.println("");
+            }
+            while (iterador_cell.hasNext()) {
+                cell = iterador_cell.next();
                 //System.out.println("celda actual: "+cell);
             }
             id_row++;
         }
+        in.close();
         System.out.println("Creado para ambos formatos");
     }
-    
-    public static void main(String[] args) throws IOException, FileNotFoundException, InvalidFormatException {    
-        // TODO code application logic here
-        libro_blanco();
-        abrir_libro();
-        escribir_hoja_calc();
-        System.out.println("");
-        leer_hoja_calc();
-        diferentes_tipos_celdas();
-        lectura_xls_xlsx();
+
+    public static void copiar_pegar_mismo_tiempo() throws FileNotFoundException, IOException, InvalidFormatException {
+        File file = new File("Hoja_calc.xlsx");
+        FileInputStream in = new FileInputStream(file);
+        FileOutputStream out = new FileOutputStream(new File("Copiado.xlsx"));
+        Workbook libro_in = WorkbookFactory.create(in);
+        XSSFWorkbook libro_salida = new XSSFWorkbook();
+        Sheet hoja_in = libro_in.getSheetAt(0);
+        Sheet hoja_out = libro_salida.createSheet("Hoja1");
+        Row row;
+        Iterator<Row> iterador_fila = hoja_in.iterator();
+        int id_row = 0;
+        while (iterador_fila.hasNext()) {
+            int id_cell = 0;
+            row = (XSSFRow) iterador_fila.next();
+            Iterator<Cell> iterador_cell = row.iterator();
+            Row row_out = hoja_out.createRow(id_row);
+//            row_out=row;
+//            System.out.println("fila "+id_row+": "+row_out);
+            //Cell cell;
+            System.out.println("identificador de row " + id_row);
+            while (iterador_cell.hasNext()) {
+                Cell cell = row_out.createCell(id_cell);
+                cell.setCellValue(iterador_cell.next().getStringCellValue());
+                System.out.println(cell);
+                row_out.createCell(id_cell);
+
+                id_cell++;
+            }
+            //hoja_out.createRow(id_row)
+            id_row++;
+        }
+        libro_salida.write(out);
+        in.close();
+        out.close();
     }
-    
+
+    public static void copiar_pegar() throws FileNotFoundException, IOException, InvalidFormatException {
+        FileInputStream in = new FileInputStream(new File("Hoja_calc.xlsx"));
+        Workbook libro_entrada = WorkbookFactory.create(in);
+        Sheet hoja_lectura = libro_entrada.getSheetAt(0);
+        Iterator<Row> row_iterator = hoja_lectura.iterator();
+        Row row;
+        XSSFRow row_salida;
+        int id_row = 0;
+        Iterator<Cell> cell_iterator = null;
+        //
+        DataFormatter data = new DataFormatter();
+        FileOutputStream out = new FileOutputStream(new File("Salida.xlsx"));
+        XSSFWorkbook libro_salida = new XSSFWorkbook();
+        XSSFSheet hoja = libro_salida.createSheet("hoja1");
+        
+        while (row_iterator.hasNext()) {
+            row = (Row) row_iterator.next();
+            cell_iterator = row.iterator();
+            row_salida = hoja.createRow(id_row++);
+            int id_cel=0;
+            while (cell_iterator.hasNext()) {
+                System.out.println(cell_iterator.next());
+                //                                
+//                XSSFCell celda = (XSSFCell) row_salida.createCell(id_cel++);
+//                celda.setCellValue(data.formatCellValue(cell_iterator.next()));
+            }
+        }
+        
+        //data.formatCellValue(cell)
+
+        libro_salida.write(out);
+        in.close();
+        out.close();
+    }
+
+    public static void main(String[] args) throws IOException, FileNotFoundException, InvalidFormatException {
+        // TODO code application logic here
+//        libro_blanco();
+//        abrir_libro();
+//        escribir_hoja_calc();
+//        System.out.println("");
+//        leer_hoja_calc();
+//        diferentes_tipos_celdas();
+//        lectura_xls_xlsx();
+//        copiar_pegar_mismo_tiempo();
+//        System.out.println("");
+        copiar_pegar();
+    }
+
 }
